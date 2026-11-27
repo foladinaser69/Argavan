@@ -172,15 +172,15 @@ button,.ro,.tgr,.ah,.sdi{touch-action:manipulation}
 @media screen and (max-width:480px){.sc table{font-size:12px}.sc th,.sc td{padding:8px 6px}.sc td{white-space:normal}}
 
 .sh table.hc th:nth-child(2){width:62px}.sh table.hc th:nth-child(3){width:auto}.sh table.hc th:nth-child(4){width:78px}.sh table.hc th:nth-child(5){width:92px}.sh table.hc th:nth-child(6){width:58px}.sh table.hc th:nth-child(7){width:106px}
-.sh table.hc td:nth-child(2){font-size:11px;word-break:break-all}.sh table.hc td:nth-child(n+4){font-size:11.5px}
-.sh .cl2{line-height:18px;max-height:36px;overflow:hidden;word-break:break-word}.sh .cl2 .m2{line-height:18px}
+.sh table.hc td:nth-child(2){font-size:11px;overflow:hidden}.sh table.hc td:nth-child(n+4){font-size:11.5px}
+.sh .cl2{line-height:18px;max-height:36px;overflow:hidden}.sh .cl2 .m2{line-height:18px}
 
 .xo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .xo button{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 8px;border:1px solid var(--l);border-radius:18px;background:var(--c);color:var(--t);cursor:pointer;transition:transform .12s}
 .xo button:active{transform:scale(.96)}
 .xo .xi{width:58px;height:58px;border-radius:19px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 18px rgba(0,0,0,.22)}
 .xo b{font-size:16px}.xo small{color:var(--m);font-size:11px}
-.sh .dfb>div+div{margin-top:6px}.sh .dfb{border:1px solid #000;border-radius:6px;padding:10px 14px;margin-top:16px;width:100%;box-sizing:border-box;font-size:12px;line-height:1.9;text-align:right;color:#000;word-break:break-word}
+.sh .dfb>div+div{margin-top:6px}.sh .dfb{border:1px solid #000;border-radius:6px;padding:10px 14px;margin-top:16px;width:100%;box-sizing:border-box;font-size:12px;line-height:1.9;text-align:right;color:#000}
 
 #lk{position:fixed;inset:0;z-index:9999;background:var(--bg);overflow:auto;-webkit-overflow-scrolling:touch}
 #lk .lkb{max-width:520px;margin:0 auto;padding:max(28px,env(safe-area-inset-top)) 20px 36px}
@@ -191,6 +191,9 @@ button,.ro,.tgr,.ah,.sdi{touch-action:manipulation}
 .trb.w{background:linear-gradient(135deg,#ef4444,#f97316);box-shadow:0 6px 16px rgba(239,68,68,.3)}
 .lkd>*:not(#lk):not(#ts):not(script){visibility:hidden}
 @media print{#lk{display:none!important}}
+
+.sh .brand{position:absolute;bottom:26px;right:40px;margin:0;font-size:8px;color:#555;direction:rtl}
+@media print{.sh .brand{position:static!important;margin-top:20px;text-align:right}}
 </style></head><body>
 <header><button id="hb"></button><span id="ti"></span><span id="ha"></span></header>
 <main id="m"></main><button class="fab" id="fab">+</button>
@@ -277,7 +280,7 @@ return `<div class="nochrome card row"><button class="pb" onclick="print()">چا
 <table${hasC(v)?' class="hc"':''}><tr><th style="width:26px">ردیف</th>${hasC(v)?'<th>کد</th>':''}<th>توضیحات</th><th>تعداد</th><th>مبلغ(${cu})</th><th>تخفیف</th><th>جمع</th></tr>${v.items.map((i,k)=>`<tr><td>${fn(k+1)}</td>${hasC(v)?`<td>${fn(ic(i))}</td>`:''}<td class="r"><div class="cl2">${esc(i.n)}${i.sd!==false&&i.ds?`<div class="m2">${esc(i.ds)}</div>`:''}</div></td><td>${fq(i.q)} ${esc(i.u)}</td><td>${fa(i.p)}</td><td>${fa(i.d)}</td><td>${fa(i.q*i.p-i.d)}</td></tr>`).join('')}</table>
 <div class="bt"><div>${op.length?`<div style="font-weight:700;margin-bottom:6px">[[ مانده فاکتورهای تسویه نشده: ${fn(op.length)} مورد به جمع ${fa(sum(op,x=>calc(x).rem))} ${cu} می باشد ]]</div>`:''}${v.note&&sv('pNote')&&!(sv('pDef')&&String(v.note).trim()==String(s.note||'').trim())?`<div style="margin:6px 0 10px;border-right:3px solid #999;padding:2px 8px 2px 0;line-height:1.7"><div>توضیحات:</div><div>${esc(v.note).replace(/\n/g,'<br>')}</div></div>`:''}${s.bank&&s.banks.length?`<div class="bx" style="padding:8px;line-height:1.7"><b>💳 اطلاعات پرداخت</b>${s.banks.map(b=>`<div style="margin-top:6px"><b>${esc(b.bank)}</b>${b.card?'<br>شماره کارت : '+esc(b.card):''}${b.acc?'<br>شماره سپرده : '+esc(b.acc):''}${b.sheba?'<br>شماره شبا : '+esc(b.sheba):''}${b.owner?'<br>به نام '+esc(b.owner):''}</div>`).join('')}</div>`:''}</div>
 <div><div class="bx">${tt('جمع',c.s)}<div style="border-top:1px solid #555">${tt('جمع تخفیف ها',c.d)}</div></div>${c.tx?tt('مالیات',c.tx):''}${tt('جمع کل',c.jk)}${tt('تخفیف فاکتور',v.disc)}${tt('کسر رند',v.round)}${v.cash?tt('پرداخت نقدی',v.cash):''}${v.chq?tt('پرداخت چکی',v.chq):''}${c.al?tt('دریافت های ثبت شده',c.al):''}<div class="tt bd2"><span>قابل پرداخت</span><span>${fa(c.rem)} ${cu}</span></div>${s.pre?`<div class="m2" style="padding:6px">${v.type=='pre'?'مانده فعلی طرف حساب: '+bh(prev):'مانده قبلی: '+bh(prev)+'<br>مانده پس از این فاکتور: '+bh(aft)}</div>`:''}</div></div>
-<div class="sg"><div>امضای خریدار</div><div>امضای فروشنده${s.sig&&s.sign?`<div><img src="${s.sign}" style="max-height:70px;max-width:100%"></div>`:''}</div><div>${s.sig&&s.stamp?`<img src="${s.stamp}" style="max-height:70px;max-width:100%">`:''}</div><div style="text-align:left;font-weight:400"></div></div>${(()=>{const L=[sv('pDef')?String(s.note||'').trim():'',sv('pFoot')?String(s.foot||'').trim():''].filter(Boolean);return L.length?`<div class="dfb">${L.map(t=>`<div>${esc(t).replace(/\n/g,'<br>')}</div>`).join('')}</div>`:''})()}${sv('pPage')?'<div class="pg">صفحه ۱</div>':''}</div>`}
+<div class="sg"><div>امضای خریدار</div><div>امضای فروشنده${s.sig&&s.sign?`<div><img src="${s.sign}" style="max-height:70px;max-width:100%"></div>`:''}</div><div>${s.sig&&s.stamp?`<img src="${s.stamp}" style="max-height:70px;max-width:100%">`:''}</div><div style="text-align:left;font-weight:400"></div></div>${(()=>{const L=[sv('pDef')?String(s.note||'').trim():'',sv('pFoot')?String(s.foot||'').trim():''].filter(Boolean);return L.length?`<div class="dfb">${L.map(t=>`<div>${esc(t).replace(/\n/g,'<br>')}</div>`).join('')}</div>`:''})()}${sv('pPage')?'<div class="pg">صفحه ۱</div>':''}${sv('pBrand')?'<div class="brand">نرم افزار حسابداری ارغوان</div>':''}</div>`}
 var SX=0,SW=0;const FLT='<svg width="26" height="22" viewBox="0 0 26 22"><path d="M2 3h22M6 11h14M10 19h6" style="stroke:var(--b)" stroke-width="3" stroke-linecap="round" fill="none"/></svg>',SHR='<svg width="30" height="30" viewBox="0 0 24 24" fill="none" style="stroke:var(--b)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 002 2h12a2 2 0 002-2v-7M16 6l-4-4-4 4M12 2v14"/></svg>';
 const FL0=()=>({title:'',cid:0,days:'',ddf:'',ddt:'',df:'',dt:'',s:[1,1,1]});var FL=FL0();
 function swS(e){SX=e.clientX;SW=0}
@@ -368,7 +371,7 @@ cus:[['cuTel','شماره تلفن'],['cuBal','مانده حساب']],
 prod:[['prSearch','کادر جستجو'],['prTabs','تب‌های گروه کالا'],['prCode','کد کالا'],['prGroup','گروه کالا'],['prUnit','واحد'],['prPrice','قیمت']],
 rep:[['rCode','ستون کد کالا'],['rGroup','ستون گروه و جمع به تفکیک گروه']],
 nav:[['nBar','نوار ناوبری پایین'],['mRep','منو: گزارشات'],['mPay','منو: دریافت و پرداخت'],['mPrj','منو: مدیریت پروژه‌ها'],['mBk','منو: بانک‌ها']],
-pr:[['pre','مانده (بدهکاری / بستانکاری) طرف حساب'],['bank','حساب‌های بانکی'],['sig','مهر و امضا'],['pLogo','لوگو'],['pAddr','آدرس و تلفن کسب‌وکار'],['pQr','کد QR'],['pStatus','وضعیت فاکتور'],['pCust','آدرس و تلفن مشتری'],['pCode','ستون کد کالا'],['pNote','یادداشت فاکتور'],['pFoot','متن پایین فاکتور'],['pDef','کادر متن پیش‌فرض زیر امضاها'],['pPage','شماره صفحه']]};
+pr:[['pre','مانده (بدهکاری / بستانکاری) طرف حساب'],['bank','حساب‌های بانکی'],['sig','مهر و امضا'],['pLogo','لوگو'],['pAddr','آدرس و تلفن کسب‌وکار'],['pQr','کد QR'],['pStatus','وضعیت فاکتور'],['pCust','آدرس و تلفن مشتری'],['pCode','ستون کد کالا'],['pNote','یادداشت فاکتور'],['pFoot','متن پایین فاکتور'],['pDef','کادر متن پیش‌فرض زیر امضاها'],['pPage','شماره صفحه'],['pBrand','نوشتهٔ «نرم افزار حسابداری ارغوان» پایین برگه']]};
 const RT_=['tax','pre','bank','sig','ab'];
 const tgGet=k=>RT_.includes(k)?!!S.st[k]:sv(k);
 function tgV(k,b){if(RT_.includes(k))S.st[k]=b;else{S.st.v=S.st.v||{};S.st.v[k]=b}save()}
@@ -404,7 +407,7 @@ async function exportRun(kind){
 if(!window.html2canvas||(kind=='pdf'&&!window.jspdf))return toast('کتابخانه ساخت فایل بارگذاری نشده (اینترنت را بررسی کنید)');
 if(window.__xb)return;window.__xb=1;toast(kind=='pdf'?'در حال ساخت PDF با کیفیت بالا...':'در حال ساخت عکس با کیفیت بالا...');
 let name=ptitle()+(kind=='pdf'?'.pdf':'.png');
-const host=document.createElement('div');host.style.cssText='position:fixed;left:-10000px;top:0;width:794px;background:#fff;color:#000;direction:rtl;font:13px Vazirmatn,Tahoma,sans-serif;--bg:#fff;--c:#fff;--t:#000;--m:#555;--l:#ccc';
+const host=document.createElement('div');const _g=document.createElement('style');_g.textContent='*{word-break:normal!important;overflow-wrap:normal!important;letter-spacing:normal!important;word-spacing:normal!important;text-shadow:none!important;hyphens:none!important}';host.appendChild(_g);host.style.cssText='position:fixed;left:-10000px;top:0;width:794px;background:#fff;color:#000;direction:rtl;font:13px Vazirmatn,Tahoma,sans-serif;--bg:#fff;--c:#fff;--t:#000;--m:#555;--l:#ccc';
 if(V=='pv'){const c=document.querySelector('.sh').cloneNode(true);c.style.cssText='width:794px;min-height:1122px;transform:none;margin:0;box-shadow:none';host.appendChild(c);}else if(V=='rp'){const c=document.querySelector('.rs').cloneNode(true);c.style.cssText='width:794px;min-height:1122px;zoom:1;margin:0;box-shadow:none';host.appendChild(c)}else{const c=document.getElementById('m').cloneNode(true);c.querySelectorAll('button,.tabs,.bb,.nochrome,.sw-a,.fab,input,select').forEach(e=>{if(e.tagName=='INPUT'||e.tagName=='SELECT'){const p=document.createElement('span');p.textContent=e.value||'';e.replaceWith(p)}else e.remove()});c.style.cssText='width:794px;padding:30px;box-sizing:border-box;max-width:none';const t=document.createElement('h2');t.style.cssText='text-align:center;margin:20px 0 0';t.textContent=document.getElementById('ti').textContent;host.appendChild(t);host.appendChild(c)}
 document.body.appendChild(host);
 try{try{await document.fonts.ready}catch(e){}await new Promise(r=>setTimeout(r,80));
@@ -489,7 +492,7 @@ document.addEventListener('visibilitychange',()=>{if(document.visibilityState=='
 setTimeout(()=>{let l='';try{l=localStorage.getItem('fa-ab')||''}catch(e){}if(S.st.ab!==false&&!l.endsWith('|'+abName()))autoBackup()},4000)})();
 
 /* ============ LICENSE / TRIAL ============ */
-const APP_VER='2.0';
+const APP_VER='2.1';
 const LIC={days:10,api:'',contact:'',pub:{"kty":"EC","crv":"P-256","x":"FHlc2UmWm1SeVCFv__Zq45ZniftEIpR-feBRjmFP2Tg","y":"wOMyE0o8aqiuHAQxeRQ8t4lIpz1zTITH4eaTQHeG25c"}};
 var LS={mode:'trial',left:LIC.days,why:'',full:null,pending:false,_k:''},LICDEV='';
 const nid=x=>String(x||'').toLowerCase().replace(/[^a-z0-9]/g,'');
