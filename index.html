@@ -434,13 +434,16 @@ if(cvBlank(cv))throw new Error('blank');
 return cv}catch(e){
 if(window.html2canvas)return html2canvas(host,{scale:sc,backgroundColor:'#fff',useCORS:true,logging:false});
 throw e}}
+
+function spaceFaEn(root){const P='[\u0600-\u065F\u066E-\u06EF\u06FA-\u06FF]',N='[0-9A-Za-z\u06F0-\u06F9\u0660-\u0669]',a=new RegExp('('+P+')(?='+N+')','g'),b=new RegExp('('+N+')(?='+P+')','g'),w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;const L=[];while(n=w.nextNode())L.push(n);
+L.forEach(t=>{const p=t.parentNode&&t.parentNode.nodeName;if(p=='STYLE'||p=='SCRIPT')return;const v=t.nodeValue,r=v.replace(a,'$1 ').replace(b,'$1 ');if(r!==v)t.nodeValue=r})}
 async function exportRun(kind){
 if(kind=='pdf'&&!window.jspdf)return toast('کتابخانه ساخت فایل بارگذاری نشده (اینترنت را بررسی کنید)');
 if(window.__xb)return;window.__xb=1;toast(kind=='pdf'?'در حال ساخت PDF با کیفیت بالا...':'در حال ساخت عکس با کیفیت بالا...');
 let name=ptitle()+(kind=='pdf'?'.pdf':'.png');
-const host=document.createElement('div');const _g=document.createElement('style');_g.textContent='*{word-break:normal!important;overflow-wrap:normal!important;letter-spacing:normal!important;word-spacing:normal!important;text-shadow:none!important;hyphens:none!important;font-family:Vazirmatn,Tahoma,sans-serif!important}';host.appendChild(_g);try{await Promise.all([document.fonts.load('400 13px Vazirmatn','فارسی'),document.fonts.load('700 13px Vazirmatn','فارسی')])}catch(e){}host.style.cssText='position:fixed;left:-10000px;top:0;width:794px;background:#fff;color:#000;direction:rtl;font:13px Vazirmatn,Tahoma,sans-serif;--bg:#fff;--c:#fff;--t:#000;--m:#555;--l:#ccc';
+const host=document.createElement('div');const _g=document.createElement('style');_g.textContent='*{word-break:normal!important;overflow-wrap:normal!important;letter-spacing:normal!important;word-spacing:normal!important;text-shadow:none!important;hyphens:none!important;font-family:Vazirmatn,Tahoma,sans-serif!important}';host.appendChild(_g);try{await Promise.all([document.fonts.load('400 13px Vazirmatn','فارسی'),document.fonts.load('700 13px Vazirmatn','فارسی')])}catch(e){}spaceFaEn(host);host.style.cssText='position:fixed;left:-10000px;top:0;width:794px;background:#fff;color:#000;direction:rtl;font:13px Vazirmatn,Tahoma,sans-serif;--bg:#fff;--c:#fff;--t:#000;--m:#555;--l:#ccc';
 if(V=='pv'){const c=document.querySelector('.sh').cloneNode(true);c.style.cssText='width:794px;min-height:1122px;transform:none;margin:0;box-shadow:none';host.appendChild(c);}else if(V=='rp'){const c=document.querySelector('.rs').cloneNode(true);c.style.cssText='width:794px;min-height:1122px;zoom:1;margin:0;box-shadow:none';host.appendChild(c)}else{const c=document.getElementById('m').cloneNode(true);c.querySelectorAll('button,.tabs,.bb,.nochrome,.sw-a,.fab,input,select').forEach(e=>{if(e.tagName=='INPUT'||e.tagName=='SELECT'){const p=document.createElement('span');p.textContent=e.value||'';e.replaceWith(p)}else e.remove()});c.style.cssText='width:794px;padding:30px;box-sizing:border-box;max-width:none';const t=document.createElement('h2');t.style.cssText='text-align:center;margin:20px 0 0';t.textContent=document.getElementById('ti').textContent;host.appendChild(t);host.appendChild(c)}
-document.body.appendChild(host);
+spaceFaEn(host);document.body.appendChild(host);
 try{try{await document.fonts.ready}catch(e){}await new Promise(r=>setTimeout(r,80));
 const hh=Math.max(host.offsetHeight,100),sc=Math.max(2,Math.min(4,16000/hh,Math.sqrt(4e7/(794*hh)))),cv=await renderHost(host,hh,sc);
 if(kind=='img'){let mime='image/png',b=await new Promise(r=>cv.toBlob(r,'image/png'));if(!b){mime='image/jpeg';b=await new Promise(r=>cv.toBlob(r,'image/jpeg',.96));name=name.replace(/\.png$/,'.jpg')}await pdfShare(b,name,mime)}
