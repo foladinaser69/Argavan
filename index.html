@@ -240,7 +240,7 @@ function draw(){applyTheme();sdX();if(V=='prod'&&window.__pvv!='prod'){PG=0;PQ='
 if(V=='follow')setTimeout(()=>{$('#ti').textContent='داشبورد'});$('#ti').textContent=V=='pv'?'فاکتور شماره #'+fn((S.iv.find(x=>x.id==A)||{}).no):ti[V];const bk=['cd','ie','pv','it','fl','sg','chk','bd','pd','pi','rp','ex','dy','wh','as','pl','ip','gx','ov'].includes(V);$('#hb').textContent=bk?'←':'☰';$('#hb').style.order=bk?3:1;$('#ha').style.order=bk?1:3;$('#ti').style.order=2;$('#hb').onclick=bk?appBack:()=>$('#dr').classList.add('on');
 $('#ha').innerHTML=V=='ie'?'<button class="lk" onclick="saveMenu()">ذخیره</button>':V=='it'?'<button class="lk" onclick="saveItem()">ذخیره</button>':'';
 $('#fab').style.display=['inv','cus','pay','prod','bk','prj'].includes(V)?'flex':'none';$('#fab').style.bottom=(V=='inv'||['cus','prod','bk'].includes(V))?'calc(84px + env(safe-area-inset-bottom,0px))':'';
-$('#bn').innerHTML='ارغوان<div class="mu" style="font-size:12px;font-weight:400;margin-top:4px">نرم افزار مدیریت فاکتور و مشتری</div>';
+$('#bn').innerHTML=accHdr();
 $('#mn').innerHTML=MENU.filter(m=>menuOn(m[0])).map(m=>`<a class="${m[0]==V?'on':''}" onclick="goM('${m[0]}')">${mIc(m[0])}<span>${m[1]}</span></a>`).join('');
 $('#m').innerHTML=VW[V]()+(V=='pv'||V=='rp'?'<div class="bb nochrome" style="justify-content:center;gap:28px;padding:6px 16px calc(6px + env(safe-area-inset-bottom,0px))"><button class="lk" onclick="svAs(\'img\')">'+SVI.img+'</button><button class="lk" onclick="svAs(\'pdf\')">'+SVI.pdf+'</button>'+(V=='rp'?'<button class="lk" id="xlb" onclick="svAs(\'xls\')">'+SVI.xls+'</button>':'')+'</div>':['follow','cus','prod','bk'].includes(V)?NBR():'');if(V=='pv'){qr();fitA4()}$('#m').style.overflowX=V=='rp'?'auto':'';$('#m').style.touchAction=V=='rp'?'pan-x pan-y':'';if(V=='rp'){const r=document.querySelector('.rs');if(r)r.style.zoom=Math.min(1,($('#m').clientWidth-12)/794)*ZM}if(V=='sg')sgInit();iconize()}
 function FABI(){const I=(l,ic,c,a)=>[l,ic,c,a];return({
@@ -817,6 +817,33 @@ return zipStore([['[Content_Types].xml',H+'<Types xmlns="http://schemas.openxmlf
 ['xl/styles.xml',H+'<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Tahoma"/></font><font><b/><sz val="11"/><name val="Tahoma"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>'],
 ['xl/worksheets/sheet1.xml',H+'<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView rightToLeft="1" workbookViewId="0"/></sheetViews><cols>'+widths.map((w,i)=>`<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join('')+'</cols><sheetData>'+sd+'</sheetData></worksheet>']])}
 async function prXls(){if(window.__xb)return;const L=prFiltered();if(!L.length)return toast('کالایی برای خروجی نیست');window.__xb=1;toast('در حال ساخت Excel...');const rows=[['کد','نام کالا','گروه','واحد','قیمت ('+S.st.cur+')']].concat(L.map(p=>[String(p.code||''),p.name,gName(p.g)||'گروه عمومی',p.u||'',+p.p||0]));try{await pdfShare(xlsxBlob(rows,[12,34,18,12,16]),'لیست کالاها.xlsx','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')}catch(e){toast('خطا در ساخت فایل')}window.__xb=0}
+
+/* ============ ACCOUNT / OTP LOGIN ============ */
+/* حالت دستی (بدون سرور): کد ۴ رقمی از روی شماره و این رمز ساخته می‌شود. برای ارسال خودکار پیامک، LIC.api را تنظیم کنید:
+   POST {api}/otp/send {phone}  و  POST {api}/otp/verify {phone,code} -> {ok:true} */
+const OTP_SALT='arghavan-2026';
+function otpManual(ph){let h=7;const t=ph+OTP_SALT;for(let i=0;i<t.length;i++)h=(h*31+t.charCodeAt(i))%100003;return String(1000+(h*7919)%9000)}
+var OT={ph:'',step:1,t:0,tm:null};
+const phOk=v=>/^09\d{9}$/.test(v);
+function accHdr(){const u=S.user,full=LS.mode=='full',bd=`<span class="bd ${full?'s2':'s1'}" style="margin:0">${full?'نسخه خریداری‌شده':'نسخه رایگان'}</span>`;
+return `<div style="display:flex;align-items:center;gap:10px"><span class="cn" style="width:44px;height:44px;flex:none;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px">👤</span><div style="flex:1;min-width:0;font-size:14px;line-height:1.7">${u?`<b dir="ltr" style="display:block;text-align:right">${esc(u.phone)}</b>`:`<a class="lk" style="font-size:14px" onclick="loginOpen()">ورود / ثبت نام</a>`}${bd}</div></div>${u?`<div style="margin-top:8px"><a class="mu" style="cursor:pointer;border:0;padding:0;margin:0;display:inline;font-size:12px" onclick="logout()">خروج از حساب</a></div>`:''}`}
+function loginOpen(){$('#dr').classList.remove('on');OT={ph:'',step:1,t:0,tm:null};loginDraw()}
+function loginDraw(){const o=OT,two=o.step==2;
+$('#md').innerHTML=`<div class="mb"><h3>${two?'تأیید شماره موبایل':'ورود / ثبت نام'}</h3>${two?`<div class="mu" style="margin-bottom:6px">کد ۴ رقمی ارسال‌شده به <b dir="ltr">${esc(o.ph)}</b> را وارد کنید</div><label>کد تأیید<input id="otc" inputmode="numeric" maxlength="4" dir="ltr" style="text-align:center;font-size:22px;letter-spacing:10px" autocomplete="one-time-code"></label><div class="row"><button class="pb" onclick="otpCheck()">تأیید و ورود</button><button class="sb" id="otr" onclick="otpResend()">ارسال مجدد</button></div><div class="row" style="margin-top:8px"><button class="sb" onclick="OT.step=1;loginDraw()">ویرایش شماره</button></div>`:`<label>شماره موبایل<input id="otp" inputmode="numeric" maxlength="11" dir="ltr" placeholder="09123456789" value="${esc(o.ph)}"></label><div class="row"><button class="pb" onclick="otpSend()">دریافت کد</button><button class="sb" onclick="MD.x()">انصراف</button></div>`}</div>`;
+$('#md').classList.add('on');MD={ok(){},x(){clearInterval(OT.tm);$('#md').classList.remove('on')},del(){}};if(two)otpTick()}
+function otpTick(){clearInterval(OT.tm);const b=$('#otr');if(!b)return;const f=()=>{const l=Math.max(0,OT.t-Date.now());const e=$('#otr');if(!e){clearInterval(OT.tm);return}e.disabled=l>0;e.textContent=l>0?'ارسال مجدد ('+fn(Math.ceil(l/1000))+')':'ارسال مجدد'};f();OT.tm=setInterval(f,500)}
+async function otpSend(){const ph=nd(($('#otp')||{}).value||'').trim();if(!phOk(ph))return toast('شماره موبایل معتبر نیست (مثال: 09123456789)');OT.ph=ph;
+if(LIC.api){try{const r=await fetch(LIC.api+'/otp/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:ph})});if(!r.ok)throw 0;toast('کد تأیید ارسال شد')}catch(e){return toast('ارسال کد ممکن نشد؛ اینترنت را بررسی کنید')}}
+else otpSms();
+OT.step=2;OT.t=Date.now()+60000;loginDraw()}
+function otpSms(){const m='درخواست کد ثبت نام ارغوان\nشماره: '+OT.ph;toast('پیامک آماده شد؛ دکمه ارسال را بزنید');setTimeout(()=>{location.href='sms:'+ABOUT.tel+'?body='+encodeURIComponent(m)},400)}
+function otpResend(){if(Date.now()<OT.t)return;otpSend2()}
+async function otpSend2(){if(LIC.api){try{const r=await fetch(LIC.api+'/otp/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:OT.ph})});if(!r.ok)throw 0;toast('کد دوباره ارسال شد')}catch(e){return toast('ارسال کد ممکن نشد')}}else otpSms();OT.t=Date.now()+60000;otpTick()}
+async function otpCheck(){const c=nd(($('#otc')||{}).value||'').trim();if(!/^\d{4}$/.test(c))return toast('کد ۴ رقمی را وارد کنید');let ok=false;
+if(LIC.api){try{const r=await fetch(LIC.api+'/otp/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:OT.ph,code:c})});const j=r.ok?await r.json():{};ok=!!j.ok}catch(e){return toast('اتصال به سرور ممکن نشد')}}
+else ok=c===otpManual(OT.ph);
+if(!ok)return toast('کد اشتباه است');S.user={phone:OT.ph,at:Date.now()};save();MD.x();toast('ورود با موفقیت انجام شد');draw()}
+function logout(){S.user=null;save();$('#dr').classList.remove('on');toast('از حساب خارج شدید');draw()}
 licInit();
 draw();
 </script></body></html>
